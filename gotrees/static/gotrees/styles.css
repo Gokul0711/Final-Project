@@ -1,0 +1,39 @@
+h1, h2, h3, h4 ,h5 , h6{
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+p.center {
+  text-align: center;
+}
+
+
+img.header1 {
+  width: 60%;
+  margin:0;
+  vertical-align: top;
+}
+
+img.header2 {
+  width: 40%;
+  margin: -10px;
+  vertical-align: top;
+}
+
+div.header {
+  height: 20rem;
+  width: 100%;
+  overflow: visible;
+  position: relative;
+  left: 0px;
+  top: 0px;
+  z-index: 3;
+  padding: 0;
+}
+
+p.main {
+  font-size: 1.3rem;
+  line-height: 1.3rem;
+  font-weight: 200;
+  
+}
