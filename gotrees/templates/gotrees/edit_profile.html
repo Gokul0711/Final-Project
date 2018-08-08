@@ -1,0 +1,32 @@
+{% extends "gotrees/base.html" %}
+
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+  <h3>Update my Profile</h3>
+  <br>
+  <div class="container">
+    <form action="{% url 'edit_profile' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="form-first_name">Name</label>
+        <input class="form-control" type="text" id="form-fist_name" placeholder="Your Name">
+      </div>
+      <div class="form-group">
+        <label for="form-phrase">My Phrase</label>
+        <input class="form-control" type="text" id="form-phrase" placeholder="Type Something Inspiring">
+      </div>
+      <div class="form-group">
+        <label for="form-country">Country</label>
+        <input class="form-control" type="text" id="form-country" placeholder="Enter Country">
+      </div>
+      <div class="form-control">
+        <label for="form-region">Region</label>
+        <input class="form-control" type="text" id="form-region" placeholder="Enter Region">
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+{% endbock %}

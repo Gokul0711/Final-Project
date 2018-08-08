@@ -1,0 +1,242 @@
+{% extends "gotrees/base.html" %}
+{% load static %}
+
+{% block title %}My Forest{% endblock %}
+
+{% block body %}
+
+  <div class="container-fluid" style="margin:0; padding: 0; width: 100%">
+    <div class="row">
+      <div class="col-5 profile-container">
+        <img class="photo-frame img-fluid" src="{% static 'gotrees/img/profil-2base.png' %}" id="frame" alt="Forest creator profile photo">
+        <img class="user-photo img-fluid" src="{% static 'gotrees/img/image.jpg' %}" id="user-photo">
+        <img class="photo-default img-fluid" src="{% static 'gotrees/img/profil-on-2base.jpeg' %}" alt="Not user photo yet">
+        <!-- This is to give a good height for the div profile-container -->
+        <img class="img-fluid" src="{% static 'gotrees/img/size.jpg' %}" id="size" alt="base">
+      </div>
+      <div class="col-7" style="background-color: #e8e8e8; padding: 5rem;" id="text-profile">
+        <div class="container">
+          <div class="row justify-content-end">
+            <div class="col-12">
+              <h3>David's Forest Architecte</h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p class="personal" style="text-align: center;">What about a phrase to inspire?</p>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-6 ">
+              <p>Actuation Area:</p>
+            </div>
+            <div class="col-6 ">
+              <p>Trees Already Planted:</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 ">
+              <p class="personal">Spain</p>
+            </div>
+            <div class="col-6 ">
+              <p class="personal">120</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 ">
+              <p class="personal">Andalusia</p>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-12">
+              <p>Why do I do this?</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p class="personal">
+                I've been always thinking what to do to make of this world a better place.
+              </p>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <p>David's Badges</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <div data-toggle="tooltip" data-placement="top" title="Tooltip on top" class="done" alt="legend" style="background: url({% static 'gotrees/img/badges2.png' %}) 0 0;"></div>
+          </div>
+          <div class="col-2">
+            <div class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -100px 0;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div id="canvas" height="300px;"></div>
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    let base = document.querySelector('#frame');
+    let photo = document.querySelector('#user-photo');
+    let size = document.querySelector('#size');
+    function resize() {
+      let resize = base.height / 3.30;
+      let height = base.height / 2;
+      let left = base.height / 7;
+      photo.style.top = resize + 'px';
+      photo.style.height = height + 'px';
+      photo.style.width = height + 'px';
+      photo.style.left = left + 'px';
+      size.style.height = base.height + 'px';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      resize();
+    });
+    window.onresize = () => {
+      resize();
+    }
+  </script>
+  <script>
+    let map;
+    let markers = [];
+    let info = new google.maps.InfoWindow();
+    let styles = [
+    ];
+    let options = {
+        center: {lat: 36.7175, lng: -4.4187}, // Malaga, An
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        maxZoom: 20,
+        panControl: true,
+        styles: styles,
+        zoom: 13,
+        zoomControl: true
+    };
+
+    // Get DOM node in which map will be instantiated
+    let canvas = document.querySelector('#canvas');
+
+    // Instantiate map
+    function initMap() {
+
+      map = new google.maps.Map(canvas, options);
+      let info_label = new google.maps.InfoWindow({map: map});
+      let geo_label = new google.maps.Marker({
+        map: map
+      });
+
+      // https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          geo_content = "<p>You're here</p>"
+          geo_label.setPosition(pos);
+          geo_label.addListener('click', function(){
+            showInfo(geo_label, geo_content);
+          });
+          map.setCenter(pos);
+
+        }, function() {
+          handleLocationError(true, info_label, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, info_label, map.getCenter());
+      }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(browserHasGeolocation ?
+                                'Error: The Geolocation service failed.' :
+                                'Error: Your browser doesn\'t support geolocation.');
+    }
+
+    initMap();
+
+
+    /*
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+      }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+      setMapOnAll(null);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+      clearMarkers();
+      markers = [];
+    }
+
+    // Adds a marker to the map and push to the array.
+    function addMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map
+        //draggable: true,
+      });
+      markers.push(marker);
+
+    }
+
+    // This event listener will call addMarker() when the map is clicked.
+    map.addListener('click', function(event) {
+      deleteMarkers();
+      addMarker(event.latLng);
+
+      var param = {
+        lat : event.latLng.lat,
+        lng : event.latLng.lng
+      }
+
+      $.getJSON("/markers", param);
+    });
+
+
+    // Description for addMarker function, add marker to map2 with the given location data
+    function addOldMarker(data) {
+      var marker = new google.maps.Marker({
+        position: {lat: data.lat, lng: data.lng},
+        map: map
+      });
+      markers.push(marker);
+    }
+
+
+    function addTheMarker() {
+      // Calling to /update in order to receive the JSON object with all the markers positions from database
+      $.getJSON("/map_producer", function(data, textStatus, jqXHR) {
+        // Iterate over all element in list
+          if (data != undefined){
+
+            addOldMarker(data);
+          }
+      });
+    }
+
+    addTheMarker();*/
+  </script>
+{% endblock %}

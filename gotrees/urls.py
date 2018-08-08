@@ -19,5 +19,10 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='index')
+    path('', views.index, name='index'),
+    path('login', views.login_page, name='login'),
+    path('register', views.register, name='register'),
+    path('logout', views.logout_page, name='logout'),
+    path('<str:user_username>/myforest', views.myforest, name='myforest'),
+    path('<str:user_username>/edit_profile', views.edit_profile, name='edit_profile')
 ]

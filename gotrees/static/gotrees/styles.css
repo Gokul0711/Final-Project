@@ -1,3 +1,5 @@
+{% load static %}
+
 h1, h2, h3, h4 ,h5 , h6{
   text-align: center;
   margin-bottom: 2em;
@@ -7,33 +9,74 @@ p.center {
   text-align: center;
 }
 
-
-img.header1 {
-  width: 60%;
-  margin:0;
-  vertical-align: top;
-}
-
-img.header2 {
-  width: 40%;
-  margin: -10px;
-  vertical-align: top;
-}
-
 div.header {
-  height: 20rem;
+
   width: 100%;
-  overflow: visible;
-  position: relative;
-  left: 0px;
-  top: 0px;
-  z-index: 3;
+  height:15rem;
+  overflow: hidden;
   padding: 0;
+  position: relative;
+}
+
+img.header-img{
+  position: absolute;
+  bottom: 0;
 }
 
 p.main {
   font-size: 1.3rem;
   line-height: 1.3rem;
   font-weight: 200;
-  
+
+}
+
+div.profile-container{
+  position: relative;
+}
+
+.photo-frame{
+  position: absolute;
+  z-index: 2;
+  top:0;
+
+}
+
+.photo-default{
+  position: absolute;
+  z-index: 0;
+  top:0;
+
+}
+
+
+img.user-photo{
+  position: absolute;
+  top: 0;
+  left: 20%;
+  width: 70%;
+  height: 50%;
+  z-index:1;
+  transform: rotate(14deg);
+}
+
+#text-profile p{
+  font-family: 'Love Ya Like A Sister', cursive;
+  font-size: 1.3rem;
+  line-height: 1.3rem;
+  font-weight: 200;
+}
+
+#text-profile h3 {
+  font-family: 'Love Ya Like A Sister', cursive;
+}
+
+p.personal {
+  color: #6f7383;
+  font-family: 'Satisfy', cursive !important;
+}
+
+div.done {
+  height: 100px;
+  width: 100px;
+  background-color: aquamarine;
 }
