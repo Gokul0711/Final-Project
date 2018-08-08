@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-5 profile-container">
         <img class="photo-frame img-fluid" src="{% static 'gotrees/img/profil-2base.png' %}" id="frame" alt="Forest creator profile photo">
-        <img class="user-photo img-fluid" src="{% static 'gotrees/img/image.jpg' %}" id="user-photo">
+        {% if image %}<img class="user-photo img-fluid" src="../../static/gotrees/uploads/{{ image }}" id="user-photo">{% endif %}
         <img class="photo-default img-fluid" src="{% static 'gotrees/img/profil-on-2base.jpeg' %}" alt="Not user photo yet">
         <!-- This is to give a good height for the div profile-container -->
         <img class="img-fluid" src="{% static 'gotrees/img/size.jpg' %}" id="size" alt="base">

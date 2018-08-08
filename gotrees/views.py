@@ -4,13 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .models import Profiles, Trees
+from .helpers import upload_file, get_profile
 
 # Create your views here.
 def index(request):
+    """Index view"""
     return render(request, 'gotrees/index.html')
 
 def register(request):
-
+    """Register view"""
     if request.method == 'POST':
         username = request.POST["username"]
         email = request.POST["email"]
@@ -21,13 +23,11 @@ def register(request):
         user = User.objects.create_user(username, email, password, first_name=first_name)
         user.save()
         return HttpResponseRedirect(reverse('index'))
-
-
     else:
         return render(request, "gotrees/register.html")
 
 def login_page(request):
-
+    """Login view"""
     if request.method == 'POST':
         username = request.POST["username"]
         password = request.POST["password"]
@@ -45,31 +45,28 @@ def login_page(request):
 
 
 def logout_page(request):
-
+    """Logout view"""
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 
 
 def myforest(request, user_username):
-
-    user = User.objects.get(username=user_username)
-
-    context = {
-    "user_username": user_username,
-    "first_name": user.first_name,
-    "country": user.profile.all()[0].country,
-    "region": user.profile.all()[0].region,
-    "my_phrase": user.profile.all()[0].my_phrase,
-    "my_text": user.profile.all()[0].my_text
-    }
+    """Public profile view"""
+    context = get_profile(user_username)
     return render(request, "gotrees/myforest.html", context)
 
 
 def edit_profile(request, user_username):
-
-
+    """Editing profile"""
+    # Just granting acces to profile owner
     if request.user.username == user_username:
         if request.method == 'POST':
+            try:
+                file = request.FILES["profile_image"]
+                image = upload_file(file, user_username)
+            except KeyError:
+                image = ''
+
             name = request.POST["name"]
             my_phrase = request.POST["my_phrase"]
             country = request.POST["country"]
@@ -82,13 +79,26 @@ def edit_profile(request, user_username):
 
             if len(user.profile.all()) == 0:
                 profile = Profiles.objects.create(country=country, region=region, my_phrase=my_phrase, my_text=my_text, user_id=user)
-                profile.save()
-                return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
+
+                if image == False:
+                    profile.save()
+                    context = get_profile(user_username)
+                    context["message"] = True
+                    return render(request, 'gotrees/edit_profile.html', context)
+                else:
+                    return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
             else:
                 Profiles.objects.filter(user_id=user).update(country=country, region=region, my_phrase=my_phrase, my_text=my_text)
-                return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
-        else:
-            return render(request, 'gotrees/edit_profile.html')
+                profile = Profiles.objects.get(user_id=user)
 
+                if image == False:
+                    context = get_profile(user_username)
+                    context["message"] = True
+                    return render(request, 'gotrees/edit_profile.html', context)
+                else:
+                    return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
+        else:
+            context = get_profile(user_username)
+            return render(request, 'gotrees/edit_profile.html', context)
     else:
         return HttpResponseRedirect(reverse('index'))
