@@ -8,25 +8,48 @@
   <h3>Update my Profile</h3>
   <br>
   <div class="container">
-    <form action="{% url 'edit_profile' %}" method="POST">
+    <div class="container" id="profile_image" style="height: 10rem; width: 10rem; background-color: lightgray;"></div>
+    <form action="{% url 'edit_profile' user.username %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="form-first_name">Name</label>
-        <input class="form-control" type="text" id="form-fist_name" placeholder="Your Name">
+      <div class="form-row justify-content-center">
+        <div class="form-group">
+          <label for="form-profile_image">Profile Image</label>
+          <input type="file" class="form-control" name="profile_image" placeholder="Choose your image" id="form-profile_image">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="form-phrase">My Phrase</label>
-        <input class="form-control" type="text" id="form-phrase" placeholder="Type Something Inspiring">
+      <div class="form-row justify-content-center" >
+        <div class="form-group col-md-3">
+          <label for="form-first_name">Name</label>
+          <input class="form-control" name="name" type="text" id="form-fist_name" placeholder="Your Name">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="form-country">Country</label>
+          <input class="form-control" name="country" type="text" id="form-country" placeholder="Enter Country">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="form-region">Region</label>
+          <input class="form-control" name="region" type="text" id="form-region" placeholder="Enter Region">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="form-country">Country</label>
-        <input class="form-control" type="text" id="form-country" placeholder="Enter Country">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-9">
+          <label for="form-my_phrase">My Phrase</label>
+          <input maxlength="100" class="form-control" name="my_phrase" type="text" id="form-my_phrase" placeholder="Type Something Inspiring">
+        </div>
       </div>
-      <div class="form-control">
-        <label for="form-region">Region</label>
-        <input class="form-control" type="text" id="form-region" placeholder="Enter Region">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-9">
+          <label for="form-my_text">Why do I do this?</label>
+          <textarea maxlength="400" class="form-control" name="my_text" id="form-my_text" placeholder="Type here what makes you moove!"></textarea>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Update</button>
+      <div class="form-row justify-content-center">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
     </form>
   </div>
-{% endbock %}
+  <br>
+  <br>
+  <br>
+  <br>
+{% endblock %}
