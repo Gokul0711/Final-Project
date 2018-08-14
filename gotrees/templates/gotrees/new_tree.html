@@ -1,0 +1,151 @@
+{% extends "gotrees/base.html" %}
+
+{% load static %}
+
+{% block title %}Add a New Tree{% endblock %}
+
+{% block body %}
+  <h3>A new Tree</h3>
+  <br>
+  <div class="container">
+    <form action="{% url 'new_tree' user.username %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="lat" value="" id="lat">
+      <input type="hidden" name="lng" value="" id="lng">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-3">
+          <label for="form-tree_name">Give a name to your tree</label><small>(Optional)</small>
+          <input class="form-control" name="tree_name" type="text" id="form-tree_name" placeholder="Your Tree's Name" {% if tree_name %}value="{{ tree_name }}"{% endif %}>
+        </div>
+      </div>
+      <div class="form-row justify-content-center" >
+        <div class="form-group col-md-3">
+          <label for="form-tree_kind">What kind of tree is?</label><small>(Optional)</small>
+          <input class="form-control" name="tree_kind" type="text" id="form-tree_kind" placeholder="Enter Tree's Species" {% if tree_kind %}value="{{ tree_kind }}"{% endif %}>
+        </div>
+      </div>
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-9">
+          <label for="form-tree_dedication">Do you want to dedicate it to someone, or write a reflection?</label><small>(Optional)</small>
+          <textarea maxlength="400" class="form-control" name="tree_dedication" id="form-tree_dedication" placeholder="Type here what makes you moove!" {% if tree_dedication %}value="{{ tree_dedication }}"{% endif %}>{% if tree_dedication %}{{ tree_dedication }}{% endif %}</textarea>
+        </div>
+      </div>
+      <div class="form-row justify-content-center">
+        <button type="submit" class="btn btn-primary">Plant it!</button>
+      </div>
+    </form>
+  </div>
+  <br>
+  <br>
+  <div class="container"></div>
+    <div class="row justify-content-center">
+      {% csrf_token %}
+      <div class="col-9" id="canvas_map" style="height: 30rem"></div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let map;
+      let markers = [];
+      let info = new google.maps.InfoWindow();
+      let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
+      let input_lat = document.querySelector('#lat');
+      let input_lng = document.querySelector('#lng');
+
+
+      function initMap() {
+
+        let styles = [
+        ];
+
+        let options = {
+            center: {lat: 40.4167, lng: -3.7032}, // Madrid Spain
+            disableDefaultUI: true,
+            mapTypeId: 'satellite',
+            maxZoom: 20,
+            panControl: true,
+            styles: styles,
+            zoom: 13,
+            zoomControl: true
+        };
+
+        let canvas = document.querySelector('#canvas_map');
+
+        map = new google.maps.Map(canvas, options);
+        let geo_info = new google.maps.InfoWindow({map: map});
+        let geo_marker = new google.maps.Marker({
+          map: map,
+          icon: {url: '../../static/gotrees/img/person-icon-2.png'}
+        });
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            content = "<p>You're here!</p>"
+            geo_marker.setPosition(pos);
+            geo_marker.addListener('click', function(){
+              geo_info.setContent(content);
+              geo_info.open(map,geo_marker);
+            });
+            map.setCenter(pos);
+
+          }, function() {
+            handleLocationError(true, geo_info, map.getCenter());
+          });
+        } else {
+          handleLocationError(false, geo_info, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                                  'Error: The Geolocation service failed.' :
+                                  'Error: Your browser doesn\'t support geolocation.');
+      }
+
+      function setMapNull() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
+
+      function addMarker(location) {
+        let list = [{a: 0, b: 0}, {a: 65, b: 0}, {a: 0, b: 65}, {a: 65, b: 65}]
+        let random = Math.floor((Math.random() * 4));
+        var image = {
+          url: '../../static/gotrees/img/trees.png',
+          size: new google.maps.Size(65, 70),
+          origin: new google.maps.Point(list[random]["a"], list[random]["b"]),
+          anchor: new google.maps.Point(32, 70)
+         };
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: image
+        });
+        markers.push(marker);
+      }
+
+
+      initMap();
+
+      if (navigator.geolocation) {
+
+        navigator.geolocation.watchPosition((position) => {
+          input_lat.value = position.coords.latitude;
+          input_lng.value = position.coords.longitude;
+
+        });
+      }
+
+    });
+
+  </script>
+{% endblock %}

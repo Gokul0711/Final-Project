@@ -23,6 +23,15 @@ img.header-img{
   bottom: 0;
 }
 
+#navbarMain {
+  position: relative;
+  top:  -60px;
+}
+
+#navbarMain a {
+  font-weight: bold;
+}
+
 p.main {
   font-size: 1.3rem;
   line-height: 1.3rem;
@@ -32,29 +41,26 @@ p.main {
 
 div.profile-container{
   position: relative;
+  padding: 0;
 }
 
 .photo-frame{
-  position: absolute;
+  position: relative;
   z-index: 2;
-  top:0;
-
 }
 
 .photo-default{
   position: absolute;
   z-index: 0;
   top:0;
+  padding: 0;
 
 }
-
 
 img.user-photo{
   position: absolute;
   top: 0;
-  left: 20%;
-  width: 70%;
-  height: 50%;
+  padding: 0;
   z-index:1;
   transform: rotate(14deg);
 }

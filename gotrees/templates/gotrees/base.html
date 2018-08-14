@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="{% static 'gotrees/styles.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister|Satisfy" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ 'AIzaSyCCG_Zg1UOh-7XurT-ghxjKjciCe-jmLB8' | urlencode }}&v=3.exp"></script>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCG_Zg1UOh-7XurT-ghxjKjciCe-jmLB8&v=3.exp"></script>
+    <script src="{% static 'gotrees/helpers.js' %}"></script>
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
@@ -19,20 +19,21 @@
         <img src="{% static 'gotrees/img/header6.png' %}" class="header-img" alt="header">
     </div>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="{% url 'index' %}">
+    <nav class="navbar navbar-expand-lg navbar-light" id="navbarMain">
+      <a class="navbar-brand col-3" href="{% url 'index' %}">
         <img src="{% static 'gotrees/img/tree.png' %}" width="10%" height="10%" alt="Go Trees!!">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'myforest' user.username %}">MyForest</a>
-            </li>
-          {% endif %}
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="">About&nbspGoTrees!</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Stories</a>
+          </li>
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
@@ -40,13 +41,16 @@
           </li>
           {% if user.is_anonymous %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-link" href="{% url 'login' %}">Log&nbspIn</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
+            <a class="nav-link" href="{% url 'register' %}">Sign&nbspUp</a>
           </li>
           {% endif %}
           {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'myforest' user.username %}">My Forest</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">Log&nbspOut</a>
           </li>

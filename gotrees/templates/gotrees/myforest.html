@@ -5,16 +5,14 @@
 {% block title %}My Forest{% endblock %}
 
 {% block body %}
-  <div class="container-fluid" style="margin:0; padding: 0; width: 100%">
-    <div class="row">
-      <div class="col-5 profile-container">
-        <img class="photo-frame img-fluid" src="{% static 'gotrees/img/profil-2base.png' %}" id="frame" alt="Forest creator profile photo">
-        {% if image %}<img class="user-photo img-fluid" src="../../static/gotrees/uploads/{{ image }}" id="user-photo">{% endif %}
-        <img class="photo-default img-fluid" src="{% static 'gotrees/img/profil-on-2base.jpeg' %}" alt="Not user photo yet">
-        <!-- This is to give a good height for the div profile-container -->
-        <img class="img-fluid" src="{% static 'gotrees/img/size.jpg' %}" id="size" alt="base">
+  <div class="container-fluid" style="margin: 0; padding: 0; width: 100%">
+    <div class="row" style="background-color: #e8e8e8;">
+      <div class="col-sm-5 profile-container">
+          <img class="img-fluid photo-frame" src="{% static 'gotrees/img/profil-2base.png' %}" id="frame" alt="Forest creator profile photo">
+          {% if image %}<img class="user-photo img-fluid" src="../../static/gotrees/uploads/{{ image }}" id="user-photo">{% endif %}
+          <img class="photo-default img-fluid" src="{% static 'gotrees/img/profil-on-2base.png' %}" id="bottom" alt="Not user photo yet">
       </div>
-      <div class="col-7" style="background-color: #e8e8e8; padding: 5rem;" id="text-profile">
+      <div class="col-sm-7" style=" padding: 5rem;" id="text-profile">
         <div class="container">
           <div class="row justify-content-end">
             <div class="col-12">
@@ -40,12 +38,16 @@
               <p class="personal">{% if country %}{{ country }}{% else %}Your Country{% endif %}</p>
             </div>
             <div class="col-6 ">
-              <p class="personal">{% if number_trees %}{{ number_trees }}{% else %}0{% endif %}</p>
+              <p class="personal">{% if trees %}{{ trees }}{% endif %}</p>
             </div>
           </div>
           <div class="row">
-            <div class="col-12 ">
+            <div class="col-6 ">
               <p class="personal">{% if region %}{{ region }}{% else %}Your Region{% endif %}</p>
+            </div>
+            <div class="col-6 ">
+              <p>Points:</p>
+              <p class="personal">{% if points %}{{ points }}{% endif %}</p>
             </div>
           </div>
           <br>
@@ -67,12 +69,40 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-2">
-            <div data-toggle="tooltip" data-placement="top" title="Tooltip on top" class="done" alt="legend" style="background: url({% static 'gotrees/img/badges2.png' %}) 0 0;"></div>
-          </div>
-          <div class="col-2">
-            <div class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -100px 0;"></div>
-          </div>
+          {% if heart %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="You've planted your First Tree!! This World has a new Heart taking care of It" class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) 0 0;"></div>
+            </div>
+          {% else %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="Start planting Trees and get Gifts and new Badges!" class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -95px -95px;"></div>
+            </div>
+          {% endif %}
+          {% if diamont %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="You're a diamont! 30 baby trees live thanks to You." class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) 0 -95px;"></div>
+            </div>
+          {% endif %}
+          {% if flag %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="People can start calling you a Lider. 60 trees already planted!!" class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -190px -95px;"></div>
+            </div>
+          {% endif %}
+          {% if basic_cup %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="Congratulation, Only those who persevere can get a Cup! 100 trees planted!"class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -95px -190px;"></div>
+            </div>
+          {% endif %}
+          {% if golden_cup %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="You're Awesome. We couldn't but give you this Golden Cup. 150 trees!" class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) 0 -190px;"></div>
+            </div>
+          {% endif %}
+          {% if star %}
+            <div class="col-2">
+              <div data-toggle="tooltip" data-placement="top" title="The Start is the best way of saying that you make a Great GREAT! Job &#x1F917; . 200 trees planted!" class="done" style="background: url({% static 'gotrees/img/badges2.png' %}) -190px -190px;"></div>
+            </div>
+          {% endif %}
         </div>
         <div class="row">
           <div class="col-9"></div>
@@ -84,34 +114,164 @@
     </div>
   </div>
 </div>
+<br>
+<br>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        {% if user.is_authenticated and user.username == user_username %}<a href="{% url 'new_tree' user.username %}" alt="Plant a new Tree"><button type="button" class="btn btn-success btn-lg btn-block">Plant a New Tree</button></a>{% endif %}
+      </div>
+    </div>
+  </div>
   <br>
-  <div id="canvas" style="height: 300px;"></div>
+  <br>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        {% csrf_token %}
+        <div id="canvas_map" style="height: 40rem;" data-user="{{ user_username }}"></div>
+      </div>
+    </div>
+  </div>
   <script>
-    // Enable the use of bootstrap tooltip on the profile bagges
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    });
-
-    // Adjust the profile photo to fit at the correct position in the frame
-    let base = document.querySelector('#frame');
-    let photo = document.querySelector('#user-photo');
-    let size = document.querySelector('#size');
-    function resize() {
-      let resize = base.height / 3.30;
-      let height = base.height / 2;
-      let left = base.height / 7;
-      photo.style.top = resize + 'px';
-      photo.style.height = height + 'px';
-      photo.style.width = height + 'px';
-      photo.style.left = left + 'px';
-      size.style.height = base.height + 'px';
-    }
     document.addEventListener('DOMContentLoaded', () => {
-      resize();
-    });
-    window.onresize = () => {
-      resize();
-    }
-  </script>
+      // Enable the use of bootstrap tooltip on the profile bagges
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
 
+      let base = document.querySelector('#frame');
+      let photo = document.querySelector('#user-photo');
+      let bottom = document.querySelector('#bottom');
+
+      // Adjust the profile photo to fit at the correct position in the frame
+      function resize() {
+        let resize = base.height / 3.30;
+        let height = base.height / 2;
+        let width = base.width / 1.45;
+        let left = base.height / 7;
+        photo.style.top = resize + 'px';
+        photo.style.height = height + 'px';
+        photo.style.width = width + 'px';
+        photo.style.left = left + 'px';
+        bottom.style.height = base.height + 'px';
+        bottom.style.width = base.width + 'px';
+      }
+        resize();
+      window.onresize = () => {
+        resize();
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let map;
+    let markers = [];
+    let info = new google.maps.InfoWindow();
+    let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
+    let canvas = document.querySelector('#canvas_map');
+
+
+    function initMap() {
+
+      let styles = [
+      ];
+
+      let options = {
+          center: {lat: 40.4167, lng: -3.7032}, // Madrid Spain
+          disableDefaultUI: true,
+          mapTypeId: 'satellite',
+          maxZoom: 20,
+          panControl: true,
+          styles: styles,
+          zoom: 13,
+          zoomControl: true
+      };
+
+
+
+      map = new google.maps.Map(canvas, options);
+      let geo_info = new google.maps.InfoWindow({map: map});
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          map.setCenter(pos);
+
+        }, function() {
+          handleLocationError(true, geo_info, map.getCenter());
+        });
+      } else {
+        handleLocationError(false, geo_info, map.getCenter());
+      }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(browserHasGeolocation ?
+                                'Error: The Geolocation service failed.' :
+                                'Error: Your browser doesn\'t support geolocation.');
+    }
+
+    function setMapNull() {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+      markers = []
+    }
+
+    function addOldMarker(data) {
+      let list = [{a: 0, b: 0}, {a: 65, b: 0}, {a: 0, b: 65}, {a: 65, b: 65}]
+      let random = Math.floor((Math.random() * 4));
+      var image = {
+        url: '../../static/gotrees/img/trees.png',
+        size: new google.maps.Size(65, 70),
+        origin: new google.maps.Point(list[random]["a"], list[random]["b"]),
+        anchor: new google.maps.Point(32, 70)
+       };
+
+      var marker = new google.maps.Marker({
+        position: {lat: parseFloat(data.lat), lng: parseFloat(data.lng)},
+        map: map,
+        icon: image
+      });
+
+      let content = `<h5>${data.name}</h5>
+                     <p><strong>Specie</strong>: ${data.kind}</p>
+                     <p><strong>Dedication:</strong></p>
+                     <p>${data.dedication}</p>
+
+                     <button data-id="${data.id}" type="button" class="btn btn-outline-warning btn-sm remove_tree">Remove Tree</button>`;
+      marker.addListener('click', () => {
+        info.setContent(content);
+        info.open(map, marker);
+      });
+      markers.push(marker);
+    }
+
+    initMap();
+    let dataToSend = {"user_username": canvas.dataset.user};
+
+    AJAXRequest("/add_old_markers", csrf, dataToSend).then(function(data) {
+      for (let j = 0; j < data.length; j++) {
+        addOldMarker(data[j]);
+      }
+    });
+  });
+
+  document.addEventListener('click', event => {
+    let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
+
+    if (event.target.className.includes('remove_tree')){
+        AJAXRequest("/delete_marker", csrf, {"id": event.target.dataset.id});
+        location.reload();
+    }
+
+  });
+
+  </script>
 {% endblock %}

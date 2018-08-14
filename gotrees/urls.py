@@ -24,5 +24,9 @@ urlpatterns = [
     path('register', views.register, name='register'),
     path('logout', views.logout_page, name='logout'),
     path('<str:user_username>/myforest', views.myforest, name='myforest'),
-    path('<str:user_username>/edit_profile', views.edit_profile, name='edit_profile')
+    path('<str:user_username>/edit_profile', views.edit_profile, name='edit_profile'),
+    path('add_marker', views.add_marker, name='add_marker'),
+    path('add_old_markers', views.add_old_markers, name="add_old_markers"),
+    path('<str:user_username>/new_tree', views.new_tree, name="new_tree"),
+    path('delete_marker', views.delete_marker, name="delete_marker")
 ]

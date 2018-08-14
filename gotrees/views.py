@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .models import Profiles, Trees
-from .helpers import upload_file, get_profile
+from .helpers import upload_file, get_profile, update_badges
 
 # Create your views here.
 def index(request):
@@ -22,6 +22,10 @@ def register(request):
 
         user = User.objects.create_user(username, email, password, first_name=first_name)
         user.save()
+        profile = Profiles.objects.create(user_id=user)
+        profile.save()
+        badge = Badges.objcts.create(user=user)
+        badge.save()
         return HttpResponseRedirect(reverse('index'))
     else:
         return render(request, "gotrees/register.html")
@@ -52,6 +56,7 @@ def logout_page(request):
 
 def myforest(request, user_username):
     """Public profile view"""
+    update_badges(user_username)
     context = get_profile(user_username)
     return render(request, "gotrees/myforest.html", context)
 
@@ -102,3 +107,59 @@ def edit_profile(request, user_username):
             return render(request, 'gotrees/edit_profile.html', context)
     else:
         return HttpResponseRedirect(reverse('index'))
+
+def new_tree(request, user_username):
+    if request.user.username == user_username:
+        if request.method == "POST":
+
+            lat = float(request.POST["lat"])
+            lng = float(request.POST["lng"])
+            tree_name = request.POST["tree_name"]
+            tree_kind = request.POST["tree_kind"]
+            tree_dedication = request.POST["tree_dedication"]
+
+            user = User.objects.get(username=user_username)
+            tree = Trees.objects.create(lat=lat, lng=lng, kind=tree_kind, name=tree_name, dedication=tree_dedication, user=user)
+
+            tree.save()
+
+            return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
+
+        else:
+            return render(request, 'gotrees/new_tree.html')
+    else:
+        return HttpResponseRedirect(reverse('index'))
+
+
+def add_marker(request):
+    """Add one tree-marker to the map"""
+
+    lat = request.POST["lat"]
+    lng = request.POST["lng"]
+
+    user = User.objects.get(username=request.user.username)
+    marker = Markers.objects.create(lat=lat, lng=lng, user=user)
+
+    marker.save()
+    return JsonResponse({"success": True})
+
+def delete_marker(request):
+    """Remove a tree-marker from map"""
+    id = request.POST["id"]
+
+
+    tree_to_remove = Trees.objects.get(id=id)
+    tree_to_remove.delete()
+
+    return JsonResponse({"success": True})
+
+def add_old_markers(request):
+    """Add all already planted tree-markers to map"""
+
+    user_username = request.POST["user_username"]
+
+    user = User.objects.get(username=user_username)
+    trees = Trees.objects.filter(user=user).values()
+
+    feed = list(trees)
+    return JsonResponse(feed, safe=False)

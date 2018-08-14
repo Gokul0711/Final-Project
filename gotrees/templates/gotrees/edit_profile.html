@@ -8,7 +8,7 @@
   <h3>Update my Profile</h3>
   <br>
   <div class="container">
-    <div class="container" id="profile_image" style="height: 10rem; width: 10rem; background-color: lightgray; padding: 0;">
+    <div class="container" id="profile_image" style="height: 50%; width: 50%; background-color: lightgray; padding: 0;">
       {% if image %}<img class="img" style="width: 100%; object-fit: cover;" src="../../static/gotrees/uploads/{{ image }}">{% endif %}
     </div>
     <div class="row justify-content-center" style="visibility: {% if message %}visible{% else %}hidden{% endif %};"><div class="alert alert-warning col-md-3" role="alert">Sorry this image was too big</div></div>
@@ -51,7 +51,6 @@
       </div>
     </form>
   </div>
-  <br>
   <br>
   <br>
   <br>

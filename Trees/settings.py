@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'Trees.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd37ses1srvglvd',
-        'USER':'ymiksjsqzmncqi',
-        'HOST': 'ec2-174-129-247-1.compute-1.amazonaws.com',
+        'NAME': 'd20146jh4cop1c',
+        'USER':'ldgwwszfholvwz',
+        'HOST': 'ec2-50-16-196-138.compute-1.amazonaws.com',
         'PORT': '5432',
-        'PASSWORD': '584032434860a88510dec7e7660f4710be1262fe4d17fd0c77f0b7aec14a1f48'
+        'PASSWORD': '803bb0d8bfc6850261de9b47b6aca765837538e6e3a197123d3b7979445338c1'
     }
 }
 
