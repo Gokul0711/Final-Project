@@ -116,13 +116,40 @@
 </div>
 <br>
 <br>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-sm-6">
-        {% if user.is_authenticated and user.username == user_username %}<a href="{% url 'new_tree' user.username %}" alt="Plant a new Tree"><button type="button" class="btn btn-success btn-lg btn-block">Plant a New Tree</button></a>{% endif %}
+  {% if user.is_authenticated and user.username == user_username %}
+    <h3>Have already some little trees to plant?</h3>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+          <h5>Wait a momment, Did you get your TreeCodes?</h5>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+          <p class="text-center">Before you go and plant them. You need to get your TreeCodes. Every code is different and can be used only once.<br>
+            You have to include them in the photos of your trees planted in order to lets us verify that you're making good.</p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+          <a href="{% url 'treecodes'  %}" alt="Get your TreeCodes"><button type="button" class="btn btn-info btn-lg btn-block">Get Your CodeTrees</button></a>
+        </div>
+      </div>
+      <br>
+      <br>
+      <h5>Yes! I Got Them</h5>
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+          <p class="text-center">Perfect, now your ready! Go to some good spot for them. After finishing with planting click here to add that tree to your list</p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+        <a href="{% url 'new_tree' user.username %}" alt="Plant a new Tree"><button type="button" class="btn btn-success btn-lg btn-block">Plant a New Tree</button></a>
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
   <br>
   <br>
   <div class="container">
@@ -132,7 +159,23 @@
         <div id="canvas_map" style="height: 40rem;" data-user="{{ user_username }}"></div>
       </div>
     </div>
+    <br>
+    <div class="row justify-content-center">
+      <div class="col-sm-10">
+        {% if user.is_authenticated and user.username == user_username %}
+          <h5>This is your personal tree's map!</h5>
+          <p class="text-center">Here you can see every tree yous have planted using our webapp. Different icons show different kind of threes.</p>
+          <p class="text-center">If for some reason, you couldn't keep counting one of then, remember to delete it from the map, for this just <br>
+            click on the tree, and use the button 'Remove Tree'</p>
+          <br>
+          <br>
+        {% endif %}
+      </div>
+    </div>
   </div>
+  <br>
+  <br>
+  <br>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Enable the use of bootstrap tooltip on the profile bagges
@@ -170,7 +213,6 @@
     let info = new google.maps.InfoWindow();
     let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
     let canvas = document.querySelector('#canvas_map');
-
 
     function initMap() {
 
@@ -225,12 +267,12 @@
     }
 
     function addOldMarker(data) {
-      let list = [{a: 0, b: 0}, {a: 65, b: 0}, {a: 0, b: 65}, {a: 65, b: 65}]
-      let random = Math.floor((Math.random() * 4));
+      let list = [{a: 0, b: 0}, {a: 65, b: 65}, {a: 65, b: 0}, {a: 0, b: 65}]
+      let n = parseInt(data.kind);
       var image = {
-        url: '../../static/gotrees/img/trees.png',
+        url: '../../static/gotrees/img/trees2.png',
         size: new google.maps.Size(65, 70),
-        origin: new google.maps.Point(list[random]["a"], list[random]["b"]),
+        origin: new google.maps.Point(list[n]["a"], list[n]["b"]),
         anchor: new google.maps.Point(32, 70)
        };
 
@@ -241,11 +283,10 @@
       });
 
       let content = `<h5>${data.name}</h5>
-                     <p><strong>Specie</strong>: ${data.kind}</p>
+                     <p><strong>Specie</strong>: ${data.species}</p>
                      <p><strong>Dedication:</strong></p>
-                     <p>${data.dedication}</p>
-
-                     <button data-id="${data.id}" type="button" class="btn btn-outline-warning btn-sm remove_tree">Remove Tree</button>`;
+                      <p>${data.dedication}</p>
+                     {% if user.is_authenticated and user.username == user_username %}<button data-id="${data.id}" type="button" class="btn btn-outline-warning btn-sm remove_tree">Remove Tree</button>{% endif %}`;
       marker.addListener('click', () => {
         info.setContent(content);
         info.open(map, marker);
@@ -261,17 +302,15 @@
         addOldMarker(data[j]);
       }
     });
-  });
+    });
+    document.addEventListener('click', event => {
+      let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
 
-  document.addEventListener('click', event => {
-    let csrf = document.querySelector('#canvas_map').previousSibling.previousSibling.value;
+      if (event.target.className.includes('remove_tree')){
+          AJAXRequest("/delete_marker", csrf, {"id": event.target.dataset.id});
+          location.reload();
+      }
 
-    if (event.target.className.includes('remove_tree')){
-        AJAXRequest("/delete_marker", csrf, {"id": event.target.dataset.id});
-        location.reload();
-    }
-
-  });
-
+    });
   </script>
 {% endblock %}

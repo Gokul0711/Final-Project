@@ -17,11 +17,14 @@
   <body>
     <div class="container-fluid header">
         <img src="{% static 'gotrees/img/header6.png' %}" class="header-img" alt="header">
+        <div style="position: absolute; top: 150px; left: 20px; height: 100px; width: 100px; z-index: 1;">
+          <a href="{% url 'index' %}" alt='Home'><img href="{% url 'index' %}" src="{% static 'gotrees/img/icon.png' %}"></a>
+        </div>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light" id="navbarMain">
-      <a class="navbar-brand col-3" href="{% url 'index' %}">
-        <img src="{% static 'gotrees/img/tree.png' %}" width="10%" height="10%" alt="Go Trees!!">
+      <a class="navbar-brand col-1" href="{% url 'index' %}">
+
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -60,6 +63,21 @@
     </nav>
     {% block body %}
     {% endblock %}
+    <footer style="height: 12rem; background-color: darkGray; width: 100%;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+
+          </div>
+          <div class="col-md-4">
+
+          </div>
+          <div class="col-md-4">
+
+          </div>
+        </div>
+      </div>
+    </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   </body>

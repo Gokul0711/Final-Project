@@ -13,7 +13,6 @@ div.header {
 
   width: 100%;
   height:15rem;
-  overflow: hidden;
   padding: 0;
   position: relative;
 }
@@ -37,6 +36,11 @@ p.main {
   line-height: 1.3rem;
   font-weight: 200;
 
+}
+
+div.div_main {
+  margin-bottom: 6rem;
+  margin-top: 6rem;
 }
 
 div.profile-container{
@@ -85,4 +89,11 @@ div.done {
   height: 100px;
   width: 100px;
   background-color: aquamarine;
+}
+
+img.kind_tree {
+  height: 65px;
+  width: 65px;
+  cursor: pointer;
+  position: relative;
 }

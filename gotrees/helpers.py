@@ -16,7 +16,6 @@ def upload_file(file, user_username):
             name = (file.name).split(".")[0] + "." + end
             with open('gotrees/static/gotrees/uploads/' + name, 'wb+') as destination:
                 for chunk in file.chunks():
-                    print('Something')
                     destination.write(chunk)
             profile.image = name
             profile.save()
@@ -35,21 +34,21 @@ def get_profile(user_username):
 
 
     context = {
-    "user_username": user_username,
-    "first_name": user.first_name,
-    "trees": trees,
-    "points": trees * 3,
-    "country": profile.country,
-    "region": profile.region,
-    "my_phrase": profile.my_phrase,
-    "my_text": profile.my_text,
-    "image": profile.image,
-    "heart": badge.heart,
-    "diamont": badge.diamont,
-    "flag": badge.flag,
-    "basic_cup": badge.basic_cup,
-    "golden_cup": badge.golden_cup,
-    "star": badge.star
+        "user_username": user_username,
+        "first_name": user.first_name,
+        "trees": trees,
+        "points": trees * 3,
+        "country": profile.country,
+        "region": profile.region,
+        "my_phrase": profile.my_phrase,
+        "my_text": profile.my_text,
+        "image": profile.image,
+        "heart": badge.heart,
+        "diamont": badge.diamont,
+        "flag": badge.flag,
+        "basic_cup": badge.basic_cup,
+        "golden_cup": badge.golden_cup,
+        "star": badge.star
     }
 
     return context
@@ -85,6 +84,7 @@ def update_badges(user_username):
     else:
         badge.star= False
     badge.save()
+
 
 
 if __name__ == "__main__":

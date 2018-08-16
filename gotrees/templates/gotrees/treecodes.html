@@ -1,0 +1,23 @@
+{% extends "gotrees/base.html" %}
+
+{% load static %}
+
+{% block title %}Get your TreeCodes{% endblock %}
+
+{% block body %}
+  <h3>Hey {{ user.first_name }}, You'r almost there</h3>
+  <p>Just let us know how many trees are you going to plant</p>
+  <form action="{% url 'treecodes' %}" method="POST">
+    <div class="form-group">
+      <label for="number-input">Enter quantity <small>(Maximum 100 for each time)</small></label>
+      <input type="number" name="number" class="form-control" placeholder="Enter Username" id="number-input" min="1" max="100">
+    </div>
+  </form>
+  {% if codes %}
+    {% for code in codes %}
+      <p>{{ code }}</p>
+    {% endfor %}
+  {% endif %}
+
+
+{% endblock %}

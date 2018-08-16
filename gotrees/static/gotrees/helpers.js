@@ -14,15 +14,10 @@ function AJAXRequest(address, crsf, dataToSend){
   request.setRequestHeader('X-CSRFToken', crsf);
   request.send(data);
 
-
   return new Promise(function(resolve, reject) {
-
     request.onload = () => {
       var data = JSON.parse(request.responseText);
       resolve(data);
     }
-
   });
-
-
 };
