@@ -176,6 +176,28 @@
   <br>
   <br>
   <br>
+  {% if offers %}
+    <div id="gifts_offers_discounts" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <a href="" alt="" ><img class="d-block w-100" src="" alt="First slide"></a>
+        </div>
+        {% for offer in offers %}
+          <div class="carousel-item">
+            <a href="" alt="" ><img class="d-block w-100" src="" alt="Second slide"></a>
+          </div>
+        {% endfor %}
+      </div>
+      <a class="carousel-control-prev" href="#gifts_offers_discounts" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#gifts_offers_discounts" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  {% endif %}
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Enable the use of bootstrap tooltip on the profile bagges
@@ -200,7 +222,13 @@
         bottom.style.height = base.height + 'px';
         bottom.style.width = base.width + 'px';
       }
+
+      document.addEventListener('DOMContentLoaded', event => {
         resize();
+        event.target.removeEventListener(event.type);
+      });
+
+      resize();
       window.onresize = () => {
         resize();
       }

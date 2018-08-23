@@ -10,7 +10,8 @@ p.center {
 }
 
 div.header {
-
+  overflow-x: hidden;
+  overflow-y: visible;
   width: 100%;
   height:15rem;
   padding: 0;
@@ -20,6 +21,7 @@ div.header {
 img.header-img{
   position: absolute;
   bottom: 0;
+  object-fit: contain;
 }
 
 #navbarMain {
@@ -69,7 +71,7 @@ img.user-photo{
   transform: rotate(14deg);
 }
 
-#text-profile p{
+#text-profile p, p.code{
   font-family: 'Love Ya Like A Sister', cursive;
   font-size: 1.3rem;
   line-height: 1.3rem;
@@ -79,6 +81,7 @@ img.user-photo{
 #text-profile h3 {
   font-family: 'Love Ya Like A Sister', cursive;
 }
+
 
 p.personal {
   color: #6f7383;

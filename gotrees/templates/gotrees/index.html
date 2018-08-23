@@ -5,7 +5,7 @@
 {% block title %}Go Trees!{% endblock %}
 
 {% block body %}
-  <h1 style="margin-bottom: 10px; padding-bottom: 10px;" class="display-3"><span class="display-4">This is </span>Go<span style="color: seagreen;">Trees</span>!</h1>
+  <h1 style="margin-bottom: 10px; padding-bottom: 10px; font-weight: bold;" class="display-3"><span class="display-4">This is </span>Go<span style="color: seagreen;">Trees</span>!</h1>
   <div style="position: relative;" id="image_container">
     <img id="image_itself" src="{% static 'gotrees/img/main_image_2.jpg' %}" alt="Let's plant!" class="img" style="width: 100%; position: absolute;">
     <div style="position: absolute; left: 50%;">
@@ -20,13 +20,15 @@
     </div>
   </div>
   <script>
-    const cont = document.querySelector('#image_container');
-    const ima = document.querySelector('#image_itself');
-    cont.style.height = ima.height + 'px';
-
-    window.onresize = () => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const cont = document.querySelector('#image_container');
+      const ima = document.querySelector('#image_itself');
       cont.style.height = ima.height + 'px';
-    }
+
+      window.onresize = () => {
+        cont.style.height = ima.height + 'px';
+      }
+    });
   </script>
   <div class="container">
     <div class="div_main">

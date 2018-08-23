@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Profiles, Trees, Badges
+from .models import Profiles, Trees, Badges, TreeCodes, Offers
 from .helpers import upload_file, get_profile, update_badges
 from django.db.models import Q
 import time
@@ -182,8 +182,10 @@ def treecodes(request):
             list_objects = []
 
             for i in range(int(number)):
-                code = user.username[:2] + c_base.day + user.username[2:]
-                + c_base.month + user.id + c_base.year + user.first_name
+                code = user.username[:2] + str(c_base.day) + user.username[2:]\
+                 + str(c_base.month) + (str(c_base.year))[:2] + str(user.id) + \
+                 (str(c_base.year))[2:] + user.first_name + str(c_base.microsecond) + str(i)
+
 
                 list_objects.append(TreeCodes(code=code, user=user))
                 list_codes.append(code)
