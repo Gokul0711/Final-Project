@@ -1,13 +1,13 @@
 # Final Project
 ## Welcome to GoTrees!
 
-####Introduction
+#### Introduction
 
 **GoTrees** is a small web-application with the aim of making people more responsible and participative about environment. The idea is to turn this into a game by leaving to the users the opportunity to create their own virtual forest, which are virtual at the same time that are real, winning badges and getting discounts or gifts.
 
 **In essence** after being create their user accounts they will be ably to go to the countryside with their own little trees and plant then there where they want and can. They can get points for every tree they plant and with those points they have options of getting coupons with discounts or gifts by external Companies or local business.
 
-####Let's go Through the Files
+#### Let's go Through the Files
 
 Inside the main folder 'Trees', we have two other folders: 'gotrees' and 'Trees'.
 
