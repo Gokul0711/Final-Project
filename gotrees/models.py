@@ -53,6 +53,8 @@ class Offers(models.Model):
     points = models.IntegerField()
     image = models.CharField(max_length=100)
     offer_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=300, null=True)
+    coupon = models.CharField(max_length=100, null=True)
     company = models.CharField(max_length=100)
     time = models.DateTimeField(auto_now=True)
     user = models.ManyToManyField(Profiles, related_name='offers', blank=True)

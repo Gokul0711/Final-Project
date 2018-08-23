@@ -48,6 +48,7 @@ def register(request):
         user = User.objects.create_user(username, email, password, first_name=first_name)
         user.save()
         profile = Profiles.objects.create(user_id=user)
+        profile.points = 0
         profile.save()
         badge = Badges.objects.create(user=user)
         badge.save()
@@ -92,11 +93,15 @@ def edit_profile(request, user_username):
     if request.user.username == user_username:
         if request.method == 'POST':
 
-            file = request.FILES["profile_image"]
-            image = upload_file(file, user_username)
+            try:
+                file = request.FILES["profile_image"]
+                image = upload_file(file, user_username)
+            except KeyError:
+                image = True
 
 
             name = request.POST["name"]
+            last_name = request.POST["last_name"]
             my_phrase = request.POST["my_phrase"]
             country = request.POST["country"]
             region = request.POST["region"]
@@ -104,6 +109,7 @@ def edit_profile(request, user_username):
 
             user = User.objects.get(id=request.user.id)
             user.first_name = name
+            user.last_name = last_name
             user.save()
 
             if len(user.profile.all()) == 0:
@@ -159,8 +165,9 @@ def new_tree(request, user_username):
             user = User.objects.get(username=user_username)
             profile = Profiles.objects.get(user_id=user)
             tree = Trees.objects.create(image=file, lat=lat, lng=lng, species=tree_species, kind=kind, name=tree_name, dedication=tree_dedication, user=user, profile=profile)
-
+            profile.points += profile.points + 3
             tree.save()
+            user.save()
 
             return HttpResponseRedirect(reverse('myforest', kwargs={"user_username": user_username}))
 
@@ -199,6 +206,64 @@ def treecodes(request):
     else:
         return HttpResponseRedirect(reverse('index'))
 
+def offer(request, offer_id):
+    """Render Offers Page"""
+    if request.user.is_authenticated:
+
+        if request.method == 'POST':
+            offer = Offers.objects.get(id=offer_id)
+            profile = Profiles.objects.get(user_id=request.user)
+
+            if offer in profile.offers.all():
+                return render(request, 'gotrees/offer.html', {"offer": offer, "message": "Ey!, You already have this offer. You don't need to have it twice.\
+                Remember that you can use your offer as many times you want until the end of the promotion"})
+            else:
+                if profile.points >= offer.points:
+                    offer.user.add(profile)
+                    profile.points = profile.points - offer.points
+                    offer.save()
+                    profile.save()
+                    return render(request, 'gotrees/offer.html', {"offer": offer, "message": 'Offer Succesfully Added to your Profile!'})
+                else:
+                    return render(request, 'gotrees/offer.html', {"offer": offer, "message": "Sorry, You don't have enought points yet"})
+        else:
+            offer = Offers.objects.get(id=offer_id)
+            return render(request, 'gotrees/offer.html', {"offer": offer})
+    else:
+        return HttpResponseRedirect(reverse('login'))
+
+def myoffers(request):
+    """Render all offers for a single user"""
+    if request.user.is_authenticated:
+        offers = Offers.objects.all()
+        profile = Profiles.objects.get(user_id=request.user)
+
+        context = {
+        "offers":offers,
+        "myoffers": profile.offers.all()
+        }
+        return render(request, 'gotrees/myoffers.html', context)
+    else:
+        return HttpResponseRedirect(reverse('login'))
+
+def coupon(request, offer_id):
+    """Show an specific coupon"""
+    if request.user.is_authenticated:
+        profile = Profiles.objects.get(user_id=request.user)
+        offer = Offers.objects.get(id=offer_id)
+
+        if offer in profile.offers.all():
+            return render(request, 'gotrees/coupon.html', {"offer": offer})
+        else:
+            offers = Offers.objects.all()
+            context = {
+            "offers":offers,
+            "myoffers": profile.offers.all()
+            }
+            return render(request, 'gotrees/myoffers.html', context)
+    else:
+        return HttpResponseRedirect(reverse('index'))
+
 def delete_marker(request):
     """Remove a tree-marker from map"""
     id = request.POST["id"]
@@ -233,7 +298,7 @@ def update(request):
         feed = Trees.objects.filter(lat__gte = sw_lat, lat__lte = ne_lat, lng__gte = sw_lng, lng__lte = ne_lng)
         list = []
         for elem in feed:
-            print(elem.lat)
+
             list.append({"tree_image": elem.image, "lat": elem.lat, "lng": elem.lng, "species": elem.species,"kind": elem.kind, "name": elem.name, "dedication": elem.dedication,
             "time": f"{elem.time.day}/{elem.time.month}/{elem.time.year}", "user": elem.user.username, "first_name": elem.user.first_name,
             "image": elem.profile.image})
@@ -242,7 +307,7 @@ def update(request):
 
         list = []
         for elem in feed:
-            print(elem.lat)
+        
             list.append({"tree_image": elem.image, "lat": elem.lat, "lng": elem.lng, "species": elem.species, "kind": elem.kind, "name": elem.name, "dedication": elem.dedication,
             "time": f"{elem.time.day}/{elem.time.month}/{elem.time.year}", "user": elem.user.username, "first_name": elem.user.first_name,
             "image": elem.profile.image})

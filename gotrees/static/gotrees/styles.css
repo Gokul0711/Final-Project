@@ -100,3 +100,18 @@ img.kind_tree {
   cursor: pointer;
   position: relative;
 }
+
+div.carousel {
+  height: 40rem;
+  overflow: hidden;
+}
+div.carousel-item img{
+  height: 40rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+footer p {
+  color: white;
+
+}

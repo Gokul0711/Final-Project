@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import Profiles, Trees, Badges
+from .models import Profiles, Trees, Badges, Offers
 import os
 
 def upload_file(file, user_username):
@@ -31,13 +31,15 @@ def get_profile(user_username):
     profile = Profiles.objects.get(user_id=user)
     badge = Badges.objects.get(user=user)
     trees = user.trees.count()
+    offers = Offers.objects.all()
 
 
     context = {
         "user_username": user_username,
         "first_name": user.first_name,
+        "last_name":user.last_name,
         "trees": trees,
-        "points": trees * 3,
+        "points": profile.points,
         "country": profile.country,
         "region": profile.region,
         "my_phrase": profile.my_phrase,
@@ -48,7 +50,8 @@ def get_profile(user_username):
         "flag": badge.flag,
         "basic_cup": badge.basic_cup,
         "golden_cup": badge.golden_cup,
-        "star": badge.star
+        "star": badge.star,
+        "offers":offers
     }
 
     return context

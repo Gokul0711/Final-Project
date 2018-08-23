@@ -29,5 +29,8 @@ urlpatterns = [
     path('<str:user_username>/new_tree', views.new_tree, name="new_tree"),
     path('delete_marker', views.delete_marker, name="delete_marker"),
     path('update', views.update, name="update"),
-    path('treecodes', views.treecodes, name="treecodes")
+    path('treecodes', views.treecodes, name="treecodes"),
+    path('offer/<int:offer_id>', views.offer, name="offer"),
+    path('myoffers', views.myoffers, name="myoffers"),
+    path('coupon/<int:offer_id>', views.coupon, name="coupon")
 ]
